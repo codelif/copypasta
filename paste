@@ -1,0 +1,51 @@
+#!/usr/bin/env python3
+import sys
+import os
+import argparse
+import shutil
+import subprocess
+
+
+CLIPBOARD = os.path.expanduser("~/.copypasta")
+
+
+def error_copy():
+    print("Please copy something with 'copy' command first.")
+    sys.exit(1)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=" Paste files from the terminal.\n\tThe clipboard is user-specific.\n\tEach copy stays in clipboard until cleared or overwritten.\n")
+    args = parser.parse_args()
+
+
+    if not os.path.exists(CLIPBOARD):
+        error_copy()
+    
+    paths = []
+    with open(CLIPBOARD) as f:
+        for i in f.readlines():
+            i = i.strip()
+            if i:
+                paths.append(i)
+
+    
+    exists = list(map(os.path.exists, paths))
+    not_exists = []
+
+    for i,v in enumerate(exists): 
+        if not v: not_exists.append(i)
+
+    if len(not_exists) != 0:
+        print("ERROR: An error occured while trying to paste files/folders. The following files/folders do not exists:")
+        for i, v in enumerate(not_exists):
+            print(f"\t{i+1}. {paths[v]}")
+        sys.exit(1)
+
+
+    
+    command = ["rsync", "-ah", "--info=progress2"]
+    command.extend(paths)
+    command.append(os.path.abspath('.'))
+    subprocess.run(command)
+
