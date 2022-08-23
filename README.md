@@ -8,7 +8,7 @@
 2. rsync
 
 ## Installation
-1. Add the scripts to your PATH.
+1. Add the scripts (`copy` and `paste`) to your PATH.
 2. Done (read note please)
 
 **Note**: Please note that ``paste`` program also exists in GNU coreutils. So if you use that command then rename this ``paste`` to something else you prefer. eg. ``pastef`` - **paste f**ile.
